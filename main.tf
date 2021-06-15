@@ -42,14 +42,14 @@ resource "azurerm_resource_group" "aml" {
 }
 
 resource "azurerm_application_insights" "aml" {
-  name                = "workspace-example-ai"
+  name                = "tycho-model-ai"
   location            = azurerm_resource_group.aml.location
   resource_group_name = azurerm_resource_group.aml.name
   application_type    = "web"
 }
 
 resource "azurerm_key_vault" "aml" {
-  name                = "workspaceexamplekeyvault"
+  name                = "tychomodelkeyvault"
   location            = azurerm_resource_group.aml.location
   resource_group_name = azurerm_resource_group.aml.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
@@ -57,7 +57,7 @@ resource "azurerm_key_vault" "aml" {
 }
 
 resource "azurerm_storage_account" "aml" {
-  name                     = "workspacestorageaccount"
+  name                     = "tychomodelstorage"
   location                 = azurerm_resource_group.aml.location
   resource_group_name      = azurerm_resource_group.aml.name
   account_tier             = "Standard"
