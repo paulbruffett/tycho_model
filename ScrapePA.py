@@ -33,7 +33,7 @@ base_url = "https://www.penny-arcade.com/news/post/%d/%d/%d/" % (day.year, day.m
 
 texts = []
 d = return_date()
-while len(texts)<3500:
+while len(texts)<200:
     day = d.next_date()
     base_url = "https://www.penny-arcade.com/news/post/%d/%d/%d/" % (day.year, day.month, day.day)
     page = requests.get(base_url)
@@ -70,6 +70,8 @@ token_credential = ClientSecretCredential(
 # Instantiate a BlobServiceClient using a token credential
 from azure.storage.blob import BlobServiceClient
 blob_service_client = BlobServiceClient(account_url=oauth_url, credential=token_credential)
+
+blob_client = blob_service_client.get_blob_client(container="tycho-words",blob="wordfile")
 
 with open("raw_data/4000posts.json", "rb") as data:
     blob_client.upload_blob(data)
