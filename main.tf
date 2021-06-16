@@ -41,15 +41,6 @@ resource "azurerm_resource_group" "aml" {
   location = "West US 2"
 }
 
-#resource "azurerm_data_share_account" "aml" {
-#  name                = "aml-dsa"
-#  location            = azurerm_resource_group.aml.location
-#  resource_group_name = azurerm_resource_group.aml.name
-#  identity {
-#    type = "SystemAssigned"
-#  }
-#}
-
 resource "azurerm_application_insights" "aml" {
   name                = "tycho-model-ai"
   location            = azurerm_resource_group.aml.location
@@ -75,18 +66,9 @@ resource "azurerm_storage_account" "aml" {
 resource "azurerm_storage_container" "aml" {
   name                  = "tycho-words"
   storage_account_name  = azurerm_storage_account.aml.name
-  container_access_type = "container"
+  container_access_type = "private"
 }
 
-#data "azuread_service_principal" "aml" {
-#  display_name = azurerm_data_share_account.aml.name
-#}
-
-#resource "azurerm_role_assignment" "example" {
-#  scope                = azurerm_storage_account.aml.id
-#  role_definition_name = "Storage Blob Data Contributor"
-#  principal_id         = data.azuread_service_principal.aml.object_id
-#}
 
 resource "azurerm_machine_learning_workspace" "aml" {
   name                    = "tycho-workspace"
