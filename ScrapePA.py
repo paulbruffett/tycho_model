@@ -51,27 +51,16 @@ with open(file_path, 'w') as f:
     json.dump(texts, f)
 
 
-from azure.identity import ClientSecretCredential
-from azure.storage.blob import BlobServiceClient
+blob_datastore_name='tychomodelstorage' # Name of the datastore to workspace
+container_name='tycho-words'
 
-active_directory_application_secret = os.getenv("SP_KEY")
-active_directory_application_id = os.getenv("SP_ID")
-active_directory_tenant_id = os.getenv("TENANT_ID")
 
-oauth_url = "https://{}.blob.core.windows.net".format("tychomodelstorage")
+from azureml.core import Workspace
+ws = Workspace.from_config()
+datastore = ws.get_default_datastore()
 
-from azure.identity import ClientSecretCredential
-token_credential = ClientSecretCredential(
-    active_directory_tenant_id,
-    active_directory_application_id,
-    active_directory_application_secret
-)
-
-# Instantiate a BlobServiceClient using a token credential
-from azure.storage.blob import BlobServiceClient
-blob_service_client = BlobServiceClient(account_url=oauth_url, credential=token_credential)
-
-blob_client = blob_service_client.get_blob_client(container="tycho-words",blob="wordfile")
-
-with open("raw_data/4000posts.json", "rb") as data:
-    blob_client.upload_blob(data)
+datastore.upload(
+    src_dir='./raw_data',
+    target_path='tycho-words/',
+    overwrite=True,
+    )

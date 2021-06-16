@@ -111,24 +111,31 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve
 
-  build:
-        runs-on: ubuntu-latest
-    
-        steps:
-          - name: checkout repo content
-            uses: actions/checkout@v2 # checkout the repository content to github runner.
-          - name: setup python
-            uses: actions/setup-python@v2
-            with:
-              python-version: 3.8 #install the python needed
-          - name: Install dependencies
-            run: |
-              python -m pip install --upgrade pip
-              if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          - name: execute py script # run the run.py to get the latest data
-            run: |
-              python ScrapePA.py
-            env:
-              SP_ID: ${{ secrets.SP_ID }} # if run.py requires passwords..etc, set it as secrets
-              SP_KEY: ${{ secrets.SP_KEY }}
-              TENANT_ID: ${{ secrets.TENANT_ID }}
+  train:
+      runs-on: ubuntu-latest
+      steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Check Out Repository
+        id: checkout_repository
+        uses: actions/checkout@v2
+          
+      # Connect or Create the Azure Machine Learning Workspace
+      - name: Connect/Create Azure Machine Learning Workspace
+        id: aml_workspace
+        uses: Azure/aml-workspace@v1
+        with:
+            azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      # Connect or Create a Compute Target in Azure Machine Learning
+      - name: Connect/Create Azure Machine Learning Compute Target
+        id: aml_compute_training
+        uses: Azure/aml-compute@v1
+        with:
+            azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      # Submit a training run to the Azure Machine Learning
+      - name: Submit training run
+        id: aml_run
+        uses: Azure/aml-run@v1
+        with:
+            azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
