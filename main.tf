@@ -25,9 +25,6 @@ terraform {
      variable "aml_sp_id" {
          type = string
      }
-     variable "aml_sp_key" {
-         type = string
-     }
 
      # Configure the Microsoft Azure Provider
      provider "azurerm" {
