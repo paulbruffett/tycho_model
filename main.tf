@@ -55,13 +55,28 @@ resource "azurerm_key_vault" "aml" {
   tenant_id           = data.azurerm_client_config.current.tenant_id
   sku_name            = "standard"
 }
-
+#storage information
 resource "azurerm_storage_account" "aml" {
   name                     = "tychomodelstorage"
   location                 = azurerm_resource_group.aml.location
   resource_group_name      = azurerm_resource_group.aml.name
   account_tier             = "Standard"
   account_replication_type = "GRS"
+}
+resource "azurerm_storage_container" "aml" {
+  name                  = "tycho-words"
+  storage_account_name  = azurerm_storage_account.aml.name
+  container_access_type = "container"
+}
+
+data "azuread_service_principal" "aml" {
+  display_name = azurerm_data_share_account.aml.name
+}
+
+resource "azurerm_role_assignment" "example" {
+  scope                = azurerm_storage_account.aml.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = data.azuread_service_principal.aml.object_id
 }
 
 resource "azurerm_machine_learning_workspace" "aml" {
