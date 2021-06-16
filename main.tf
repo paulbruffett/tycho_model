@@ -41,6 +41,15 @@ resource "azurerm_resource_group" "aml" {
   location = "West US 2"
 }
 
+resource "azurerm_data_share_account" "aml" {
+  name                = "aml-dsa"
+  location            = azurerm_resource_group.aml.location
+  resource_group_name = azurerm_resource_group.aml.name
+  identity {
+    type = "SystemAssigned"
+  }
+}
+
 resource "azurerm_application_insights" "aml" {
   name                = "tycho-model-ai"
   location            = azurerm_resource_group.aml.location
