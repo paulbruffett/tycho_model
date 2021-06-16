@@ -88,7 +88,7 @@ resource "azurerm_machine_learning_workspace" "aml" {
 }
 
 resource "azurerm_role_assignment" "aml" {
-  scope                = azurerm_storage_container.aml.id
+  scope                = azurerm_storage_account.aml.id
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = var.aml_sp_id
 }
