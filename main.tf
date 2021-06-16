@@ -22,9 +22,6 @@ terraform {
      variable "tenant_id" {
          type = string
      }
-     variable "aml_sp_id" {
-         type = string
-     }
 
      # Configure the Microsoft Azure Provider
      provider "azurerm" {
@@ -85,10 +82,4 @@ resource "azurerm_machine_learning_workspace" "aml" {
   identity {
     type = "SystemAssigned"
   }
-}
-
-resource "azurerm_role_assignment" "aml" {
-  scope                = azurerm_storage_account.aml.id
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = var.aml_sp_id
 }

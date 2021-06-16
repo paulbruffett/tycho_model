@@ -4,7 +4,9 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import date, timedelta
 import calendar
-
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+import json
+import os
 
 
 class return_date():
@@ -41,13 +43,33 @@ while len(texts)<6000:
     texts.append(results)
 
 
+if not os.path.exists('raw_data'):
+    os.makedirs('raw_data')
 
-import json
-
-import os
-file_path = "/storage/tycho_words/raw_data/4000posts.json"
+file_path = "raw_data/4000posts.json"
 with open(file_path, 'w') as f:
     json.dump(texts, f)
 
 
+from azure.identity import ClientSecretCredential
+from azure.storage.blob import BlobServiceClient
 
+active_directory_application_secret = os.getenv("SP_KEY")
+active_directory_application_id = os.getenv("SP_ID")
+active_directory_tenant_id = os.getenv("TENANT_ID")
+
+oauth_url = "https://{}.blob.core.windows.net".format("tychomodelstorage")
+
+from azure.identity import ClientSecretCredential
+token_credential = ClientSecretCredential(
+    active_directory_tenant_id,
+    active_directory_application_id,
+    active_directory_application_secret
+)
+
+# Instantiate a BlobServiceClient using a token credential
+from azure.storage.blob import BlobServiceClient
+blob_service_client = BlobServiceClient(account_url=oauth_url, credential=token_credential)
+
+with open("raw_data/4000posts.json", "rb") as data:
+    blob_client.upload_blob(data)
