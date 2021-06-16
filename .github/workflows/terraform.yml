@@ -140,3 +140,4 @@ jobs:
         uses: Azure/aml-run@v1
         with:
             azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+            runconfig_python_file: "train/run_config.yml"
