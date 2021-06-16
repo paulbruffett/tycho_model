@@ -33,7 +33,7 @@ base_url = "https://www.penny-arcade.com/news/post/%d/%d/%d/" % (day.year, day.m
 
 texts = []
 d = return_date()
-while len(texts)<6000:
+while len(texts)<3500:
     day = d.next_date()
     base_url = "https://www.penny-arcade.com/news/post/%d/%d/%d/" % (day.year, day.month, day.day)
     page = requests.get(base_url)
