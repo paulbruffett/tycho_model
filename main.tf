@@ -8,7 +8,7 @@ terraform {
            name = "tycho_model"
          }
        }
-     }
+     } 
 
      variable "subscription_id" {
          type = string
@@ -22,6 +22,12 @@ terraform {
      variable "tenant_id" {
          type = string
      }
+     variable "aml_sp_id" {
+         type = string
+     }
+     variable "aml_sp_key" {
+         type = string
+     }
 
      # Configure the Microsoft Azure Provider
      provider "azurerm" {
@@ -32,7 +38,6 @@ terraform {
     client_secret   = var.client_secret
     tenant_id       = var.tenant_id
 }
-
 
 data "azurerm_client_config" "current" {}
 
@@ -54,7 +59,9 @@ resource "azurerm_key_vault" "aml" {
   resource_group_name = azurerm_resource_group.aml.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
   sku_name            = "standard"
+  purge_protection_enabled    = false
 }
+
 #storage information
 resource "azurerm_storage_account" "aml" {
   name                     = "tychomodelstorage"
@@ -81,4 +88,10 @@ resource "azurerm_machine_learning_workspace" "aml" {
   identity {
     type = "SystemAssigned"
   }
+}
+
+resource "azurerm_role_assignment" "example" {
+  scope                = azurerm_storage_container.aml.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = var.aml_sp_id
 }
