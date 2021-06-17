@@ -6,6 +6,9 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 import json
 import os
 
+from azureml.core import Run
+run = Run.get_context()
+
 
 class return_date():
     def __init__(self):
@@ -24,6 +27,7 @@ class return_date():
 
 d = return_date()
 
+print(d)
 
 day = d.next_date()
 
@@ -39,7 +43,8 @@ while len(texts)<200:
     results = soup.find(id='body')
     results = results.get_text()
     texts.append(results)
-
+    
+print(len(texts))
 
 if not os.path.exists('raw_data'):
     os.makedirs('raw_data')
