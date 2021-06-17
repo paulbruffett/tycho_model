@@ -1,5 +1,3 @@
-
-
 import requests
 from bs4 import BeautifulSoup
 from datetime import date, timedelta
@@ -64,4 +62,3 @@ datastore.upload(
     target_path='tycho-words/',
     overwrite=True,
     )
-    
