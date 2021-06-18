@@ -58,20 +58,24 @@ while len(texts)<200:
     
 print(len(texts))
 
-if not os.path.exists('raw_data'):
-    os.makedirs('raw_data')
+if not os.path.exists('data'):
+    os.makedirs('data')
 
-file_path = "raw_data/4000posts.json"
+file_path = "data/4000posts.json"
 with open(file_path, 'w') as f:
     json.dump(texts, f)
 
-tycho_ds = Dataset.File.from_files(path='raw_data/4000posts.json')
+tycho_ds = Dataset.File.from_files(path='data/4000posts.json')
 
 workspace = Workspace(subscription_id, resource_group, workspace_name)
+
+datastore = workspace.get_default_datastore()
+datastore.upload(src_dir='data', target_path='data')
+dataset = Dataset.Tabular.from_delimited_files(path = [(datastore, ('data/4000posts.json'))])
 
 tycho_ds = tycho_ds.register(workspace=workspace,
                                  name='tycho_ds',
                                  description='tycho posts training data')
 
-dataset = Dataset.get_by_name(workspace, name='tychowords')
-dataset.download(target_path='.', overwrite=False)
+#dataset = Dataset.get_by_name(workspace, name='tychowords')
+#dataset.download(target_path='.', overwrite=False)
