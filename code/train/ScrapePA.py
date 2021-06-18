@@ -65,7 +65,7 @@ file_path = "data/4000posts.json"
 with open(file_path, 'w') as f:
     json.dump(texts, f)
 
-workspace = Workspace(subscription_id, resource_group, workspace_name)
+workspace = Workspace.from_config()
 
 datastore = workspace.get_default_datastore()
 datastore.upload(src_dir='data', target_path='data')
