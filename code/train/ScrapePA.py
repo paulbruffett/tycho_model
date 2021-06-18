@@ -6,6 +6,12 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 import json
 import os
 
+from azureml.core import Workspace, Dataset
+
+subscription_id = '3bdbda93-8c3a-472b-bdde-25e3028fc307'
+resource_group = 'azure-ml'
+workspace_name = 'tycho-workspace'
+
 from azureml.core import Run
 run = Run.get_context()
 
@@ -59,16 +65,13 @@ file_path = "raw_data/4000posts.json"
 with open(file_path, 'w') as f:
     json.dump(texts, f)
 
+tycho_ds = Dataset.File.from_files(path='raw_data/4000posts.json')
 
-blob_datastore_name='tychomodelstorage' # Name of the datastore to workspace
-container_name='tycho-words'
+workspace = Workspace(subscription_id, resource_group, workspace_name)
 
-from azureml.core import Workspace
-ws = Workspace.from_config()
-datastore = ws.get_default_datastore()
+tycho_ds = tycho_ds.register(workspace=workspace,
+                                 name='tycho_ds',
+                                 description='tycho posts training data')
 
-datastore.upload(
-    src_dir='./raw_data',
-    target_path='tycho-words/',
-    overwrite=True,
-    )
+dataset = Dataset.get_by_name(workspace, name='tychowords')
+dataset.download(target_path='.', overwrite=False)

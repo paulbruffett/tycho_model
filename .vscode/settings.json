@@ -1,3 +1,4 @@
 {
-    "azureML.defaultWorkspaceId": "/subscriptions/3bdbda93-8c3a-472b-bdde-25e3028fc307/resourceGroups/azure-ml/providers/Microsoft.MachineLearningServices/workspaces/tycho-workspace"
+    "azureML.defaultWorkspaceId": "/subscriptions/3bdbda93-8c3a-472b-bdde-25e3028fc307/resourceGroups/azure-ml/providers/Microsoft.MachineLearningServices/workspaces/tycho-workspace",
+    "python.pythonPath": "/Users/paulbruffett/opt/anaconda3/envs/tf/bin/python"
 }
