@@ -1,10 +1,7 @@
 # The script to run.
 script: ScrapePA.py
 # The arguments to the script file.
-arguments: [
-  "--kernel", "linear",
-  "--penalty", 1.0
-]
+arguments: []
 # The name of the compute target to use for this run.
 target: pbgpu
 # Framework to execute inside. Allowed values are "Python", "PySpark", "CNTK", "TensorFlow", and "PyTorch".
@@ -21,10 +18,6 @@ environment:
   name: data_gen_environment
   # Environment version
   version:
-  # Environment variables set for the run.
-  environmentVariables:
-    EXAMPLE_ENV_VAR: EXAMPLE_VALUE
-  # Python details
   python:
     # user_managed_dependencies=True indicates that the environmentwill be user managed. False indicates that AzureML willmanage the user environment.
     userManagedDependencies: false
@@ -58,30 +51,6 @@ environment:
       username:
       # The password for ACR
       password:
-  # Spark details
-  spark:
-    # List of spark repositories.
-    repositories: []
-    # The packages to use.
-    packages: []
-    # Whether to precache the packages.
-    precachePackages: true
-  # Databricks details
-  databricks:
-    # List of maven libraries.
-    mavenLibraries: []
-    # List of PyPi libraries
-    pypiLibraries: []
-    # List of RCran libraries
-    rcranLibraries: []
-    # List of JAR libraries
-    jarLibraries: []
-    # List of Egg libraries
-    eggLibraries: []
-  # R details
-  r:
-  # Inferencing stack version
-  inferencingStackVersion:
 # History details.
 history:
   # Enable history tracking -- this allows status, logs, metrics, and outputs
@@ -92,17 +61,6 @@ history:
   # Directories to sync with FileWatcher.
   directoriesToWatch:
   - logs
-# Spark configuration details.
-spark:
-  # The Spark configuration.
-  configuration:
-    spark.app.name: Azure ML Experiment
-    spark.yarn.maxAppAttempts: 1
-# HDI details.
-hdi:
-  # Yarn deploy mode. Options are cluster and client.
-  yarnDeployMode: cluster
-# Tensorflow details.
 tensorflow:
   # The number of worker tasks.
   workerCount: 1
@@ -119,14 +77,3 @@ data: {}
 # Project share datastore reference.
 sourceDirectoryDataStore:
 # AmlCompute details.
-amlcompute:
-  # VM size of the Cluster to be created.Allowed values are Azure vm sizes.The list of vm sizes is available in 'https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-sizes-specs
-  vmSize:
-  # VM priority of the Cluster to be created. Allowed values are:"dedicated" , "lowpriority".
-  vmPriority:
-  # A bool that indicates if the cluster has to be retained after job completion.
-  retainCluster: false
-  # Name of the cluster to be created. If not specified, runId will be used as cluster name.
-  name:
-  # Maximum number of nodes in the AmlCompute cluster to be created. Minimum number of nodes will always be set to 0.
-  clusterMaxNodeCount:

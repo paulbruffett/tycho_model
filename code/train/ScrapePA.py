@@ -9,6 +9,10 @@ import os
 from azureml.core import Run
 run = Run.get_context()
 
+print("current dir")
+print(os.listdir("."))
+print("root dir")
+print(os.listdir("/"))
 
 class return_date():
     def __init__(self):
