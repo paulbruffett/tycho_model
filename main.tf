@@ -70,6 +70,13 @@ resource "azurerm_storage_container" "aml" {
   container_access_type = "private"
 }
 
+resource "azurerm_container_registry" "aml" {
+  name                  = "tycho-ml-registry"
+  location                 = azurerm_resource_group.aml.location
+  resource_group_name      = azurerm_resource_group.aml.name
+  sku = "Basic"
+}
+
 
 resource "azurerm_machine_learning_workspace" "aml" {
   name                    = "tycho-workspace"
@@ -78,6 +85,7 @@ resource "azurerm_machine_learning_workspace" "aml" {
   application_insights_id = azurerm_application_insights.aml.id
   key_vault_id            = azurerm_key_vault.aml.id
   storage_account_id      = azurerm_storage_account.aml.id
+  container_registry_id = azurerm_container_registry.aml.id
 
   identity {
     type = "SystemAssigned"
