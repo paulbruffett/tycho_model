@@ -10,9 +10,11 @@ from azureml.core import Run
 run = Run.get_context()
 
 print("current dir")
-print(os.listdir("."))
+print(os.listdir("./azureml-setup"))
 print("root dir")
-print(os.listdir("/"))
+print(os.listdir("/mnt"))
+print(os.listdir("/home"))
+
 
 class return_date():
     def __init__(self):
