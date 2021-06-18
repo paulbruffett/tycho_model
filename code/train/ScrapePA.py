@@ -65,13 +65,11 @@ file_path = "data/4000posts.json"
 with open(file_path, 'w') as f:
     json.dump(texts, f)
 
-tycho_ds = Dataset.File.from_files(path='data/4000posts.json')
-
 workspace = Workspace(subscription_id, resource_group, workspace_name)
 
 datastore = workspace.get_default_datastore()
 datastore.upload(src_dir='data', target_path='data')
-dataset = Dataset.Tabular.from_delimited_files(path = [(datastore, ('data/4000posts.json'))])
+dataset = Dataset.File.from_files(path = [(datastore, ('data/4000posts.json'))])
 
 tycho_ds = tycho_ds.register(workspace=workspace,
                                  name='tycho_ds',
