@@ -57,7 +57,6 @@ with open(file_path, 'w') as f:
 blob_datastore_name='tychomodelstorage' # Name of the datastore to workspace
 container_name='tycho-words'
 
-
 from azureml.core import Workspace
 ws = Workspace.from_config()
 datastore = ws.get_default_datastore()
