@@ -112,7 +112,7 @@ resource "azurerm_subnet" "aml" {
   address_prefixes     = ["10.1.0.0/24"]
 }
 
-resource "azurerm_machine_learning_compute_cluster" "test" {
+resource "azurerm_machine_learning_compute_cluster" "aml" {
   name                          = "pbgpu"
   location                      = azurerm_resource_group.aml.location
   vm_priority                   = "Dedicated"
@@ -124,5 +124,9 @@ resource "azurerm_machine_learning_compute_cluster" "test" {
     min_node_count                   = 0
     max_node_count                   = 1
     node_idle_time_before_scale_down = "PT30S" # 30 seconds
+  }
+
+  identity {
+    type = "SystemAssigned"
   }
 }
