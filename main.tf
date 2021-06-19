@@ -54,7 +54,7 @@ resource "azurerm_application_insights" "aml" {
 }
 
 resource "azurerm_key_vault" "aml" {
-  name                     = "tychomodelkeyvault"
+  name                     = "tychomodelkeyvault2"
   location                 = azurerm_resource_group.aml.location
   resource_group_name      = azurerm_resource_group.aml.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
