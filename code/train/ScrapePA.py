@@ -65,13 +65,26 @@ file_path = "data/4000posts.json"
 with open(file_path, 'w') as f:
     json.dump(texts, f)
 
-workspace = Workspace.from_config()
 
-datastore = workspace.get_default_datastore()
+from azureml.core.authentication import ServicePrincipalAuthentication, AzureMLTokenAuthentication
+
+auth = AzureMLTokenAuthentication.create()
+
+client_id = os.environ.get('DEFAULT_IDENTITY_CLIENT_ID')
+credential = ManagedIdentityCredential(client_id=client_id)
+token = credential.get_token('https://storage.azure.com/')
+
+ws = Workspace(subscription_id=subscription_id,
+               resource_group=resource_group,
+               workspace_name=workspace_name,
+               auth=auth
+               )
+
+datastore = ws.get_default_datastore()
 datastore.upload(src_dir='data', target_path='data')
 dataset = Dataset.File.from_files(path = [(datastore, ('data/4000posts.json'))])
 
-tycho_ds = tycho_ds.register(workspace=workspace,
+tycho_ds = tycho_ds.register(workspace=ws,
                                  name='tycho_ds',
                                  description='tycho posts training data')
 

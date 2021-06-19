@@ -3,7 +3,7 @@ script: ScrapePA.py
 # The arguments to the script file.
 arguments: []
 # The name of the compute target to use for this run.
-target: pbinstance
+target: pbgpu
 # Framework to execute inside. Allowed values are "Python", "PySpark", "CNTK", "TensorFlow", and "PyTorch".
 framework: Python
 # Communicator for the given framework. Allowed values are "None", "ParameterServer", "OpenMpi", and "IntelMpi".
