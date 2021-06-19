@@ -63,14 +63,14 @@ with open(file_path, 'w') as f:
 
 ws = run.experiment.workspace
 
-dataset = Dataset.get_by_name(ws, name='tychowords')
-dataset.download(target_path='.', overwrite=False)
+#dataset = Dataset.get_by_name(ws, name='tychowords')
+#dataset.download(target_path='.', overwrite=False)
 
 
 
 datastore = ws.get_default_datastore()
 datastore.upload(src_dir='data', target_path='data')
-dataset = Dataset.File.from_files(path = [(datastore, ('data/4000posts.json'))])
+tycho_ds = Dataset.File.from_files(path = [(datastore, ('data/4000posts.json'))])
 
 tycho_ds = tycho_ds.register(workspace=ws,
                                  name='tycho_ds',
