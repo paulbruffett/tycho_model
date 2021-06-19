@@ -69,7 +69,6 @@ ws = run.experiment.workspace
 
 
 datastore = ws.get_default_datastore()
-datastore.  
 datastore.upload(src_dir='data', target_path='data', overwrite=True)
 tycho_ds = Dataset.File.from_files(path = [(datastore, ('data/4000posts.json'))])
 
