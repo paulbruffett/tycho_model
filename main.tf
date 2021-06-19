@@ -37,7 +37,7 @@ data "azurerm_client_config" "current" {}
 
 resource "azurerm_resource_group" "aml" {
   name     = "azure-ml"
-  location = "West US 2"
+  location = "West US"
 }
 
 resource "azurerm_application_insights" "aml" {
@@ -71,7 +71,7 @@ resource "azurerm_storage_container" "aml" {
 }
 
 resource "azurerm_container_registry" "aml" {
-  name                  = "tycho-ml-registry"
+  name                  = "tychomlregistry"
   location                 = azurerm_resource_group.aml.location
   resource_group_name      = azurerm_resource_group.aml.name
   sku = "Basic"

@@ -63,10 +63,6 @@ with open(file_path, 'w') as f:
 
 ws = run.experiment.workspace
 
-#dataset = Dataset.get_by_name(ws, name='tychowords')
-#dataset.download(target_path='.', overwrite=False)
-
-
 
 datastore = ws.get_default_datastore()
 datastore.upload(src_dir='data', target_path='data', overwrite=True)
