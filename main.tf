@@ -78,11 +78,12 @@ resource "azurerm_storage_container" "aml" {
 }
 
 resource "azurerm_container_registry" "aml" {
-  name                = "tychomlregistry"
-  location            = azurerm_resource_group.aml.location
-  resource_group_name = azurerm_resource_group.aml.name
-  sku                 = "Basic"
-  admin_enabled = true
+  name                     = "tychoacr"
+  resource_group_name      = azurerm_resource_group.aml.name
+  location                 = azurerm_resource_group.aml.location
+  sku                      = "Basic"
+  admin_enabled            = false
+  georeplication_locations = ["East US"]
 }
 
 
