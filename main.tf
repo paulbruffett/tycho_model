@@ -82,8 +82,7 @@ resource "azurerm_container_registry" "aml" {
   resource_group_name      = azurerm_resource_group.aml.name
   location                 = azurerm_resource_group.aml.location
   sku                      = "Basic"
-  admin_enabled            = false
-  georeplication_locations = ["East US"]
+  admin_enabled            = true
 }
 
 
