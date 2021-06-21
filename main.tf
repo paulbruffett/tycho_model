@@ -121,7 +121,7 @@ resource "azurerm_machine_learning_compute_cluster" "aml" {
   vm_size                       = "Standard_NV12s_v3"
   machine_learning_workspace_id = azurerm_machine_learning_workspace.aml.id
   subnet_resource_id            = azurerm_subnet.aml.id
-  tags = {}
+  tags = {"gpu":"NV12s_v3"}
 
   scale_settings {
     min_node_count                   = 0
