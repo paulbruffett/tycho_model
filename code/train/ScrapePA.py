@@ -31,46 +31,64 @@ class return_date():
         return(self.day)
 
 
+def refresh_data():
+    d = return_date()
 
-d = return_date()
+    print(d)
 
-print(d)
-
-day = d.next_date()
-
-base_url = "https://www.penny-arcade.com/news/post/%d/%d/%d/" % (day.year, day.month, day.day)
-
-texts = []
-d = return_date()
-while len(texts)<3500:
     day = d.next_date()
+
     base_url = "https://www.penny-arcade.com/news/post/%d/%d/%d/" % (day.year, day.month, day.day)
-    page = requests.get(base_url)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    results = soup.find(id='body')
-    results = results.get_text()
-    texts.append(results)
-    
-print(len(texts))
 
-if not os.path.exists('data'):
-    os.makedirs('data')
+    texts = []
+    d = return_date()
+    while len(texts)<3500:
+        day = d.next_date()
+        base_url = "https://www.penny-arcade.com/news/post/%d/%d/%d/" % (day.year, day.month, day.day)
+        page = requests.get(base_url)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        results = soup.find(id='body')
+        results = results.get_text()
+        texts.append(results)
+        
+    print(len(texts))
 
-file_path = "data/4000posts.json"
-with open(file_path, 'w') as f:
-    json.dump(texts, f)
+    if not os.path.exists('data'):
+        os.makedirs('data')
+
+    file_path = "data/4000posts.json"
+    with open(file_path, 'w') as f:
+        json.dump(texts, f)
+
+def upload_dataset(new_version=False):
+    ws = run.experiment.workspace
 
 
-ws = run.experiment.workspace
+    datastore = ws.get_default_datastore()
+    datastore.upload(src_dir='data', target_path='data', overwrite=True)
+    tycho_ds = Dataset.File.from_files(path = [(datastore, ('data/4000posts.json'))])
 
+    tycho_ds = tycho_ds.register(workspace=ws,
+                                    name='tycho_ds',
+                                    description='tycho posts training data',
+                                    create_new_version=new_version)
 
-datastore = ws.get_default_datastore()
-datastore.upload(src_dir='data', target_path='data', overwrite=True)
-tycho_ds = Dataset.File.from_files(path = [(datastore, ('data/4000posts.json'))])
+    tycho_ds.add_tags({"created_on": date.today().isoformat()})
 
-tycho_ds = tycho_ds.register(workspace=ws,
-                                 name='tycho_ds',
-                                 description='tycho posts training data')
+try:
+    #does the dataset exist?
+    tycho_ds = Dataset.get_by_name(ws,"dfx")
+    #is the dataset older than 6 days?
+    dataset_time = date.fromisoformat(tycho_ds.tags['created_on'])
+    time_delta = date.today() - dataset_time
+    if time_delta.days > 6:
+        refresh_data()
+        upload_dataset(new_version=True)
+except:
+    #if it doesn't exist, create it
+    print("Dataset doesn't exist")
+    refresh_data()
+    upload_dataset()
 
 #dataset = Dataset.get_by_name(workspace, name='tychowords')
 #dataset.download(target_path='.', overwrite=False)

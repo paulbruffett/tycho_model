@@ -1,3 +1,5 @@
 raw_data
 train/outputs/
 .vscode/
+config.json
+data.ipynb
