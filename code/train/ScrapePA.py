@@ -11,12 +11,6 @@ from azureml.core import Workspace, Dataset
 from azureml.core import Run
 run = Run.get_context()
 
-print("current dir")
-print(os.listdir("."))
-print("root dir")
-print(os.listdir("../"))
-
-
 class return_date():
     def __init__(self):
         self.day = date.today()
@@ -78,18 +72,18 @@ ws = run.experiment.workspace
 try:
     #does the dataset exist?
     tycho_ds = Dataset.get_by_name(ws,"tycho_ds")
+    print("Dataset Exists")
     #is the dataset older than 6 days?
     dataset_time = date.fromisoformat(tycho_ds.tags['created_on'])
     time_delta = date.today() - dataset_time
     if time_delta.days > 6:
+        print("Dataset is older than 6 days")
         refresh_data()
         upload_dataset(ws, new_version=True)
+    else:
+        print("Dataset is not older than 6 days")
 except:
     #if it doesn't exist, create it
     print("Dataset doesn't exist")
     refresh_data()
     upload_dataset(ws)
-
-#dataset = Dataset.get_by_name(workspace, name='tychowords')
-#dataset.download(target_path='.', overwrite=False)
-
