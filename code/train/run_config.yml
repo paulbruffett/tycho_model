@@ -40,7 +40,7 @@ environment:
     # Set False if necessary to work around shared volume bugs.
     sharedVolumes: true
     # Shared memory size for Docker container. Default is 2g.
-    shmSize: 2g
+    shmSize: 6g
     # Extra arguments to the Docker run command.
     arguments: []
     # Image registry that contains the base image.

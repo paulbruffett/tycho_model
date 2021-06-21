@@ -99,3 +99,36 @@ resource "azurerm_machine_learning_workspace" "aml" {
     type = "SystemAssigned"
   }
 }
+
+resource "azurerm_virtual_network" "aml" {
+  name                = "pbgpu-vnet"
+  address_space       = ["10.1.0.0/16"]
+  location            = azurerm_resource_group.aml.location
+  resource_group_name = azurerm_resource_group.aml.name
+}
+
+resource "azurerm_subnet" "aml" {
+  name                 = "pbgpu-subnet"
+  resource_group_name  = azurerm_resource_group.aml.location
+  virtual_network_name = azurerm_resource_group.aml.name
+  address_prefixes     = ["10.1.0.0/24"]
+}
+
+resource "azurerm_machine_learning_compute_cluster" "aml" {
+  name                          = "pbgpu"
+  location                      = azurerm_resource_group.aml.location
+  vm_priority                   = "Dedicated"
+  vm_size                       = "Standard_NV12s_v3"
+  machine_learning_workspace_id = azurerm_machine_learning_workspace.aml.id
+  subnet_resource_id            = azurerm_subnet.aml.id
+
+  scale_settings {
+    min_node_count                   = 0
+    max_node_count                   = 1
+    node_idle_time_before_scale_down = "PT300S" # 30 seconds
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
