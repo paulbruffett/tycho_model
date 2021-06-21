@@ -109,7 +109,7 @@ resource "azurerm_virtual_network" "aml" {
 
 resource "azurerm_subnet" "aml" {
   name                 = "pbgpu-subnet"
-  resource_group_name  = azurerm_resource_group.aml.location
+  resource_group_name  = azurerm_resource_group.aml.name
   virtual_network_name = azurerm_virtual_network.aml.name
   address_prefixes     = ["10.1.0.0/24"]
 }
