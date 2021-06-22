@@ -3,12 +3,15 @@ path = untar_data(URLs.WIKITEXT)
 from azureml.core import Workspace, Dataset
 from azureml.core import Run
 import ScrapePA
+import torch
 
 ScrapePA.refresh_data()
 
 run = Run.get_context()
 
 ws = run.experiment.workspace
+
+print(torch.cuda.get_device_name(0))
 
 
 train = pd.read_csv(path.joinpath("train.csv"),header=None)
