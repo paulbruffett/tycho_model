@@ -1,5 +1,5 @@
 # The script to run.
-script: ScrapePA.py
+script: train.py
 # The arguments to the script file.
 arguments: []
 # The name of the compute target to use for this run.

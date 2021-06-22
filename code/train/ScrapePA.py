@@ -2,7 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import date, timedelta
 import calendar
-from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 import json
 import os
 
@@ -66,24 +65,24 @@ def upload_dataset(ws, new_version=False):
 
     tycho_ds.add_tags({"created_on": date.today().isoformat()})
 
+if __name__ == "__main__":
+    ws = run.experiment.workspace
 
-ws = run.experiment.workspace
+    try:
+        #does the dataset exist?
+        tycho_ds = Dataset.get_by_name(ws,"tycho_ds")
+        print("Dataset Exists")
+        new_version = True
+    except:
+        print("Dataset doesn't exist")
+        new_version = False
 
-try:
-    #does the dataset exist?
-    tycho_ds = Dataset.get_by_name(ws,"tycho_ds")
-    print("Dataset Exists")
-    new_version = True
-except:
-    print("Dataset doesn't exist")
-    new_version = False
-
-#is the dataset older than 6 days?
-dataset_time = date.fromisoformat(tycho_ds.tags['created_on'])
-time_delta = date.today() - dataset_time
-if time_delta.days > 6:
-    print("Dataset is older than 6 days")
-    refresh_data()
-    upload_dataset(ws, new_version=new_version)
-else:
-    print("Dataset is not older than 6 days")
+    #is the dataset older than 6 days?
+    dataset_time = date.fromisoformat(tycho_ds.tags['created_on'])
+    time_delta = date.today() - dataset_time
+    if time_delta.days > 6:
+        print("Dataset is older than 6 days")
+        refresh_data()
+        upload_dataset(ws, new_version=new_version)
+    else:
+        print("Dataset is not older than 6 days")
