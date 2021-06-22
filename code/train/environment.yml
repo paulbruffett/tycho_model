@@ -6,12 +6,11 @@ dependencies:
   - python=3.7.10
   - scikit-learn=0.23.2
   - pandas=1.1.5
-  - pytorch
-  - torchvision
-  - torchaudio
   - fastai
   - matplotlib=3.3.3
   - pip:
+    - torchvision
+    - torch
     - azureml-defaults==1.19.0
     - beautifulsoup4
     - azure-storage-blob
@@ -20,4 +19,3 @@ dependencies:
 channels:
   - conda-forge
   - fastchan
-  - pytorch
