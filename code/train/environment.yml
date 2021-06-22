@@ -13,7 +13,7 @@ dependencies:
     - beautifulsoup4
     - azure-storage-blob
     - requests
-    - click
+    - click==7.1.2
 channels:
   - conda-forge
   - fastchan
