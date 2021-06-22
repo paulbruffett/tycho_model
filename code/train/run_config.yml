@@ -34,7 +34,7 @@ environment:
     # Set True to perform this run inside a Docker container.
     enabled: true
     # Base image used for Docker-based runs. Mutually exclusive with base_dockerfile.
-    baseImage: mcr.microsoft.com/azureml/openmpi4.1.0-cuda11.0.3-cudnn8-ubuntu18.04:20210615.v1
+    baseImage: mcr.microsoft.com/azureml/openmpi3.1.2-cuda10.2-cudnn8-ubuntu18.04
     # Base Dockerfile used for Docker-based runs. Mutually exclusive with base_image
     baseDockerfile:
     # Set False if necessary to work around shared volume bugs.
