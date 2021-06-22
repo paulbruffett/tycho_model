@@ -8,7 +8,6 @@ import os
 from azureml.core import Workspace, Dataset
 
 from azureml.core import Run
-run = Run.get_context()
 
 class return_date():
     def __init__(self):
@@ -65,7 +64,8 @@ def upload_dataset(ws, new_version=False):
 
     tycho_ds.add_tags({"created_on": date.today().isoformat()})
 
-if __name__ == "__main__":
+def refresh_data():
+    run = Run.get_context()
     ws = run.experiment.workspace
 
     try:

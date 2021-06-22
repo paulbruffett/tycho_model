@@ -4,7 +4,7 @@ from azureml.core import Workspace, Dataset
 from azureml.core import Run
 import ScrapePA
 
-ScrapePA.main()
+ScrapePA.refresh_data()
 
 run = Run.get_context()
 
