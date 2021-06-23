@@ -16,6 +16,7 @@ dependencies:
     - azure-storage-blob
     - requests
     - click==7.1.2
+    - mlflow
 channels:
   - conda-forge
   - fastchan

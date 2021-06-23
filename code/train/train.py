@@ -4,12 +4,40 @@ from azureml.core import Workspace, Dataset
 from azureml.core import Run
 import ScrapePA
 import torch
+import mlflow.fastai
+from mlflow.tracking import MlflowClient
+from functools import partial
+import pandas as pd
+import os
 
 ScrapePA.refresh_data()
 
 run = Run.get_context()
 
 ws = run.experiment.workspace
+
+from mlflow.tracking import MlflowClient
+from mlflow.entities.run import Run
+
+class MLFlowTracking(LearnerCallback):
+    "A `LearnerCallback` that tracks the loss and other metrics into MLFlow"
+    def __init__(self, learn:Learner, client:MlflowClient, run_id: Run):
+        super().__init__(learn)
+        self.learn = learn
+        self.client = client
+        self.run_id = run_id
+        self.metrics_names = ['train_loss', 'valid_loss'] + [o.__name__ for o in learn.metrics]
+
+    def on_epoch_end(self, epoch, **kwargs:Any)->None:
+        "Send loss and other metrics values to MLFlow after each epoch"
+        if kwargs['smooth_loss'] is None or kwargs["last_metrics"] is None:
+            return
+        metrics = [kwargs['smooth_loss']] + kwargs["last_metrics"]
+        for name, val in zip(self.metrics_names, metrics):
+            self.client.log_metric(self.run_id, name, np.float(val))
+
+mlflow_url = run.experiment.workspace.get_mlflow_tracking_uri() 
+mlfclient = mlflow.tracking.MlflowClient(tracking_uri=mlflow_url)
 
 print(torch.cuda.get_device_name(0))
 
@@ -26,7 +54,7 @@ learn = language_model_learner(
     dls_lm, AWD_LSTM, drop_mult=0.3, 
     metrics=[accuracy, Perplexity()]).to_fp16()
 
-learn.fit_one_cycle(1, 2e-2)
+learn.fit_one_cycle(1, 2e-2, callback_fns=[partial(MLFlowTracking, client=mlfclient, run_id=run.id)])
 print("trained one model")
 
 tycho_ds = Dataset.get_by_name(ws,"tycho_ds")
