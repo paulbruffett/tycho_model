@@ -18,8 +18,6 @@ ws = run.experiment.workspace
 
 print(torch.cuda.get_device_name(0))
 
-print(dir(mlfclient))
-
 train = pd.read_csv(path.joinpath("train.csv"),header=None)
 test = pd.read_csv(path.joinpath("test.csv"), header=None)
 
