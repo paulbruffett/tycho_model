@@ -5,7 +5,7 @@ from azureml.core import Run
 import ScrapePA
 import torch
 import mlflow.fastai
-from mlflow
+import mlflow
 from functools import partial
 import pandas as pd
 import os
