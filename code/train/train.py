@@ -1,5 +1,5 @@
 from fastai.text.all import *
-from fastai import LearnerCallback
+from fastai import Callback
 path = untar_data(URLs.WIKITEXT)
 from azureml.core import Workspace, Dataset
 from azureml.core import Run
@@ -19,7 +19,7 @@ ws = run.experiment.workspace
 class AML_Logging(Callback):
     def after_batch(self):
         if round(self.pct_train,3) % .005 == 0:
-            run.log("train_loss",self.loss)
+            print(round(self.pct_train,3), " ", self.loss.tolist())
 
 print(torch.cuda.get_device_name(0))
 
