@@ -64,8 +64,7 @@ def upload_dataset(ws, new_version=False):
 
     tycho_ds.add_tags({"created_on": date.today().isoformat()})
 
-def refresh_data():
-    run = Run.get_context()
+def check_data(run):
     ws = run.experiment.workspace
 
     try:

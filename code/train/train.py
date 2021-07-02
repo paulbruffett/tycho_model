@@ -10,9 +10,9 @@ from functools import partial
 import pandas as pd
 import os
 
-ScrapePA.refresh_data()
-
 run = Run.get_context()
+
+ScrapePA.check_data(run)
 
 ws = run.experiment.workspace
 
