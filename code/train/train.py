@@ -19,7 +19,7 @@ ws = run.experiment.workspace
 class AML_Logging(Callback):
     def after_batch(self):
         if round(self.pct_train,3) % .005 == 0:
-            print(round(self.pct_train,3), " ", self.loss.tolist())
+            run.log("training loss", self.loss.tolist())
 
 print(torch.cuda.get_device_name(0))
 
