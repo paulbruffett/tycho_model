@@ -17,9 +17,15 @@ ScrapePA.check_data(run)
 ws = run.experiment.workspace
 
 class AML_Logging(Callback):
+    def __init__(self, run_name):
+        self.pct_c = 0
+        self.run_name = run_name
     def after_batch(self):
-        if round(self.pct_train,3) % .005 == 0:
-            run.log("training loss", self.loss.tolist())
+        rounded_pct = round(self.pct_train,3)
+        if rounded_pct % .005 == 0:
+            if rounded_pct > self.pct_c:
+                self.pct_c = rounded_pct
+                run.log(self.run_name, self.loss.tolist())
 
 print(torch.cuda.get_device_name(0))
 
@@ -34,8 +40,14 @@ dls_lm.show_batch(max_n=2)
 learn = language_model_learner(dls_lm, AWD_LSTM, drop_mult=0.3, metrics=[accuracy, Perplexity()]).to_fp16()
 
 
+learn.fit_one_cycle(1, 2e-2,cbs=[AML_Logging("wiki train loss")])
 
-learn.fit_one_cycle(1, 2e-2,cbs=[AML_Logging()])
+results = learn.validate()
+valid_metrics = ["loss"]
+[valid_metrics.append(i.name) for i in learn.metrics]
+for i in range(len(valid_metrics)):
+    run.log("wiki validation "+valid_metrics[i], results[i])
+
 print("trained one model")
 
 tycho_ds = Dataset.get_by_name(ws,"tycho_ds")
@@ -57,7 +69,13 @@ learn = language_model_learner(
 
 #learn = learn.load('wiki103')
 learn.unfreeze()
-learn.fit_one_cycle(10, 2e-3,cbs=[AML_Logging()])
+learn.fit_one_cycle(10, 2e-3,cbs=[AML_Logging("tycho train loss")])
+
+results = learn.validate()
+valid_metrics = ["loss"]
+[valid_metrics.append(i.name) for i in learn.metrics]
+for i in range(len(valid_metrics)):
+    run.log("tycho validation "+valid_metrics[i], results[i])
 
 learn.save('tycho_model')
 print("trained tycho model")
