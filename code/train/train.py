@@ -1,5 +1,5 @@
 from fastai.text.all import *
-from fastai import Callback
+from fastai.callback.core import Callback
 path = untar_data(URLs.WIKITEXT)
 from azureml.core import Workspace, Dataset
 from azureml.core import Run
