@@ -1,9 +1,11 @@
 from fastai.text.all import *
+from fastai import LearnerCallback
 path = untar_data(URLs.WIKITEXT)
 from azureml.core import Workspace, Dataset
 from azureml.core import Run
 import ScrapePA
 import torch
+import mlflow
 from functools import partial
 import pandas as pd
 import os
@@ -13,6 +15,11 @@ ScrapePA.refresh_data()
 run = Run.get_context()
 
 ws = run.experiment.workspace
+
+class AML_Logging(Callback):
+    def after_batch(self):
+        if round(self.pct_train,3) % .005 == 0:
+            run.log("train_loss",self.loss)
 
 print(torch.cuda.get_device_name(0))
 
@@ -24,18 +31,11 @@ dls_lm = DataBlock(
     get_x=ColReader(0)).dataloaders(train, bs=64)
 dls_lm.show_batch(max_n=2)
 
-
-learn = language_model_learner(
-    dls_lm, AWD_LSTM, drop_mult=0.3, 
-    metrics=[accuracy, Perplexity()]).to_fp16()
-
-tboard_path = Path('data/tensorboard/')
-learn.callback_fns.append(partial(LearnerTensorboardWriter, 
-                                    base_dir=tboard_path, 
-                                    name='base_run'))
+learn = language_model_learner(dls_lm, AWD_LSTM, drop_mult=0.3, metrics=[accuracy, Perplexity()]).to_fp16()
 
 
-learn.fit_one_cycle(1, 2e-2)
+
+learn.fit_one_cycle(1, 2e-2,cbs=[AML_Logging()])
 print("trained one model")
 
 tycho_ds = Dataset.get_by_name(ws,"tycho_ds")
@@ -57,9 +57,7 @@ learn = language_model_learner(
 
 #learn = learn.load('wiki103')
 learn.unfreeze()
-learn.fit_one_cycle(10, 2e-3)
+learn.fit_one_cycle(10, 2e-3,cbs=[AML_Logging()])
 
 learn.save('tycho_model')
 print("trained tycho model")
-
-run.l
