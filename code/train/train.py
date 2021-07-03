@@ -36,7 +36,7 @@ get_imdb = partial(get_text_files, folders=['train', 'test', 'unsup'])
 dls_lm = DataBlock(
     blocks=TextBlock.from_folder(path, is_lm=True),
     get_items=get_imdb, splitter=RandomSplitter(0.1)
-).dataloaders(path, path=path, bs=128, seq_len=80)
+).dataloaders(path, path=path, bs=64, seq_len=80)
 
 
 #setup language model and fit
@@ -71,7 +71,7 @@ tycho[0] = tycho[0].apply(lambda x: x[145:])
 
 #create data block
 t_dls = DataBlock(
-    blocks=(TextBlock.from_df(0, is_lm=True, seq_len=72)),
+    blocks=(TextBlock.from_df(0, is_lm=True, seq_len=80)),
     get_x=ColReader(0)).dataloaders(tycho, bs=64)
 t_dls.show_batch(max_n=2)
 
