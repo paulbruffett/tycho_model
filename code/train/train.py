@@ -30,7 +30,7 @@ class AML_Logging(Callback):
 print(torch.cuda.get_device_name(0))
 
 #load generic training data from imdb
-
+path = untar_data(URLs.IMDB)
 get_imdb = partial(get_text_files, folders=['train', 'test', 'unsup'])
 
 dls_lm = DataBlock(
