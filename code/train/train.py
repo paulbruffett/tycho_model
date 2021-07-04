@@ -89,7 +89,7 @@ for i in range(len(valid_metrics)):
     run.log("tycho validation "+valid_metrics[i], results[i])
 
 os.makedirs('./outputs/model/', exist_ok=True)
-learn.path = Path("/outputs/")
+learn.path = Path("./outputs/")
 model_path = learn.save('tycho_model')
 print("trained tycho model")
 
