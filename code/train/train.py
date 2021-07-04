@@ -1,4 +1,5 @@
 from fastai.text.all import *
+from fastai.basics import Path
 from fastai.callback.core import Callback
 from azureml.core import Workspace, Dataset, Run
 import ScrapePA
@@ -21,7 +22,7 @@ class AML_Logging(Callback):
         self.run_name = run_name
     def after_batch(self):
         rounded_pct = round(self.pct_train,3)
-        if rounded_pct % .005 == 0:
+        if rounded_pct % .001 == 0:
             if rounded_pct > self.pct_c:
                 self.pct_c = rounded_pct
                 run.log(self.run_name, self.loss.tolist())
@@ -87,11 +88,22 @@ valid_metrics = ["loss"]
 for i in range(len(valid_metrics)):
     run.log("tycho validation "+valid_metrics[i], results[i])
 
-learn.save('tycho_model')
+learn.path = Path(".")
+model_path = learn.save('tycho_model')
 print("trained tycho model")
+
+model = run.register_model(model_name='tycho-model', model_path=model_path)
 
 TEXT = "Gabriel really likes"
 N_WORDS = 300
 N_SENTENCES = 2
 preds = [learn.predict(TEXT, N_WORDS, temperature=0.75) 
          for _ in range(N_SENTENCES)]
+print("\n".join(preds))
+
+TEXT = "I have been playing a lot of "
+N_WORDS = 300
+N_SENTENCES = 2
+preds = [learn.predict(TEXT, N_WORDS, temperature=0.75) 
+         for _ in range(N_SENTENCES)]
+print("\n".join(preds))
