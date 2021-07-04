@@ -42,7 +42,7 @@ dls_lm = DataBlock(
 
 #setup language model and fit
 learn = language_model_learner(dls_lm, AWD_LSTM, drop_mult=0.3, metrics=[accuracy, Perplexity()]).to_fp16()
-learn.fit_one_cycle(1, 2e-2,cbs=[AML_Logging("wiki train loss")])
+learn.fit_one_cycle(3, 2e-2,cbs=[AML_Logging("wiki train loss")])
 
 #evaluate validation metrics
 results = learn.validate()
@@ -80,7 +80,7 @@ t_dls.show_batch(max_n=2)
 learn.dls = t_dls
 
 learn.unfreeze()
-learn.fit_one_cycle(10, 2e-3,cbs=[AML_Logging("tycho train loss")])
+learn.fit_one_cycle(15, 2e-3,cbs=[AML_Logging("tycho train loss")])
 
 results = learn.validate()
 valid_metrics = ["loss"]
