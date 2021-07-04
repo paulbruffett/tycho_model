@@ -80,7 +80,7 @@ t_dls.show_batch(max_n=2)
 learn.dls = t_dls
 
 learn.unfreeze()
-learn.fit_one_cycle(1, 2e-3,cbs=[AML_Logging("tycho train loss")])
+learn.fit_one_cycle(10, 2e-3,cbs=[AML_Logging("tycho train loss")])
 
 results = learn.validate()
 valid_metrics = ["loss"]
@@ -92,8 +92,6 @@ os.makedirs('./outputs/model/', exist_ok=True)
 learn.path = Path("./outputs/")
 model_path = learn.save('tycho_model')
 print("trained tycho model")
-
-model = run.register_model(model_name='tycho-model', model_path=model_path)
 
 TEXT = "Gabriel really likes"
 N_WORDS = 300
